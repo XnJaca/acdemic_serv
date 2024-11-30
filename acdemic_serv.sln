@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "acdemic_serv", "acdemic_serv\acdemic_serv.csproj", "{1D623B2A-C15C-4900-8D79-58032CB75FAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "domain", "domain\domain.csproj", "{D19515FA-4245-471E-BED7-8902B07092AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "infrastructure", "infrastructure\infrastructure.csproj", "{6ABC9812-D1D9-4E01-BA35-EBFE00FC94BB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{1D623B2A-C15C-4900-8D79-58032CB75FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D623B2A-C15C-4900-8D79-58032CB75FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D623B2A-C15C-4900-8D79-58032CB75FAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D19515FA-4245-471E-BED7-8902B07092AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D19515FA-4245-471E-BED7-8902B07092AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D19515FA-4245-471E-BED7-8902B07092AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D19515FA-4245-471E-BED7-8902B07092AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ABC9812-D1D9-4E01-BA35-EBFE00FC94BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ABC9812-D1D9-4E01-BA35-EBFE00FC94BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ABC9812-D1D9-4E01-BA35-EBFE00FC94BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ABC9812-D1D9-4E01-BA35-EBFE00FC94BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

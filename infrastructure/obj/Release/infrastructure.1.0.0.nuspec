@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>infrastructure</id>
+    <version>1.0.0</version>
+    <authors>infrastructure</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="a2c2f2a29f8f786df43294d87630a5ad46ac86bb" />
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="domain" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="Pomelo.EntityFrameworkCore.MySql" version="8.0.2" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="/Users/jonathanadielcruzayala/Desktop/Acdemic/acdemic_serv/infrastructure/bin/Release/net8.0/infrastructure.dll" target="lib/net8.0/infrastructure.dll" />
+  </files>
+</package>

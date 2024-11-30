@@ -1,0 +1,5 @@
+/Users/jonathanadielcruzayala/Desktop/Acdemic/acdemic_serv/domain/bin/Release/net8.0/publish/domain
+/Users/jonathanadielcruzayala/Desktop/Acdemic/acdemic_serv/domain/bin/Release/net8.0/publish/domain.dll
+/Users/jonathanadielcruzayala/Desktop/Acdemic/acdemic_serv/domain/bin/Release/net8.0/publish/domain.deps.json
+/Users/jonathanadielcruzayala/Desktop/Acdemic/acdemic_serv/domain/bin/Release/net8.0/publish/domain.runtimeconfig.json
+/Users/jonathanadielcruzayala/Desktop/Acdemic/acdemic_serv/domain/bin/Release/net8.0/publish/domain.pdb
