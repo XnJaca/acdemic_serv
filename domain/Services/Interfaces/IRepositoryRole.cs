@@ -10,7 +10,7 @@ namespace domain.Services.Interfaces
     {
         Task<Result<IEnumerable<Role>>> GetAllAsync();
         Task<Result<Role>> GetByIdAsync(int id);
-        Task AddAsync(Role role);
-        Task SaveAsync();
+        Task<Result<Role>> AddAsync(Role role);
+        Task<Result<Role>> UpdateAsync(int id, Role role);
     }
 }

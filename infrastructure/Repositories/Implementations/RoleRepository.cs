@@ -18,9 +18,13 @@ namespace infrastructure.Repositories.Implementations
             _context = context;
         }
 
-        public Task AddAsync(Role role)
+        public async Task<Result<Role>> AddAsync(Role role)
         {
-            throw new NotImplementedException();
+            var result = await _context.Role.AddAsync(role);
+
+            await _context.SaveChangesAsync();
+
+            return Result<Role>.Success(result.Entity);
         }
 
         public async Task<Result<IEnumerable<Role>>> GetAllAsync()
@@ -39,9 +43,23 @@ namespace infrastructure.Repositories.Implementations
                 : Result<Role>.Success(role);
         }
 
-        public Task SaveAsync()
+        public async Task<Result<Role>> UpdateAsync(int id, Role role)
         {
-            throw new NotImplementedException();
+            var roleToUpdate = await _context.Role.FindAsync(id);
+
+            if (roleToUpdate == null)
+            {
+                return Result<Role>.Failure("Role not found");
+            }
+
+            roleToUpdate.Name = role.Name;
+            roleToUpdate.Description = role.Description;
+
+            await _context.SaveChangesAsync();
+
+            return Result<Role>.Success(roleToUpdate);
+
         }
+
     }
 }

@@ -50,15 +50,35 @@ namespace acdemic_serv.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(Role role)
+        public async Task<IActionResult> Add([FromBody] Role role)
         {
-            throw new NotImplementedException();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ApiResponse<string>.ErrorResponse("Invalid data"));
+            }
+            var result = await _serviceRole.AddAsync(role);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse<string>.ErrorResponse(result.ErrorMessage!));
+            }
+
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, ApiResponse<Role>.SuccessResponse(result.Data!));
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, Role role)
         {
-            return Ok();
+
+            _logger.LogInformation("Updating role");
+            var result = _serviceRole.UpdateAsync(id, role);
+
+            if (!result.Result.IsSuccess)
+            {
+                return BadRequest(ApiResponse<string>.ErrorResponse(result.Result.ErrorMessage!));
+            }
+
+            return Ok(ApiResponse<Role>.SuccessResponse(result.Result.Data!));
         }
 
         [HttpDelete("{id}")]

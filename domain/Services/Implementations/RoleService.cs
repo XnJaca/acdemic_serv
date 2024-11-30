@@ -15,15 +15,15 @@ namespace domain.Services.Implementations
         {
             _roleRepository = roleRepository;
         }
-        public Task AddAsync(Role role)
+        public async Task<Result<Role>> AddAsync(Role role)
         {
-            throw new NotImplementedException();
+            return await _roleRepository.AddAsync(role);
+
         }
 
         public async Task<Result<IEnumerable<Role>>> GetAllAsync()
         {
-            // return await _roleRepository.GetAllAsync();
-            throw new NotImplementedException();
+            return await _roleRepository.GetAllAsync();
         }
 
         public Task<Result<Role>> GetByIdAsync(int id)
@@ -31,9 +31,9 @@ namespace domain.Services.Implementations
             return _roleRepository.GetByIdAsync(id);
         }
 
-        public Task SaveAsync()
+        public Task<Result<Role>> UpdateAsync(int id, Role role)
         {
-            throw new NotImplementedException();
+            return _roleRepository.UpdateAsync(id, role);
         }
     }
 }
