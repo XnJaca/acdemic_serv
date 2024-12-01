@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using acdemic_serv.Utils;
+using domain.DTO;
 using domain.Entities;
 using domain.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ namespace acdemic_serv.Controllers
 
             var result = await _serviceRole.GetAllAsync();
 
-            return Ok(ApiResponse<IEnumerable<Role>>.SuccessResponse(result.Data!));
+            return Ok(ApiResponse<IEnumerable<RoleDTO>>.SuccessResponse(result.Data!));
         }
 
         [HttpGet("{id}")]
@@ -45,12 +46,12 @@ namespace acdemic_serv.Controllers
             }
             else
             {
-                return Ok(ApiResponse<Role>.SuccessResponse(result.Data!));
+                return Ok(ApiResponse<RoleDTO>.SuccessResponse(result.Data!));
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] Role role)
+        public async Task<IActionResult> Add([FromBody] RoleDTO role)
         {
             if (!ModelState.IsValid)
             {
@@ -63,14 +64,16 @@ namespace acdemic_serv.Controllers
                 return BadRequest(ApiResponse<string>.ErrorResponse(result.ErrorMessage!));
             }
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, ApiResponse<Role>.SuccessResponse(result.Data!));
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id },
+                                            ApiResponse<RoleDTO>.SuccessResponse(result.Data!));
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, Role role)
+        public IActionResult Update(int id, [FromBody] RoleDTO role)
         {
 
-            _logger.LogInformation("Updating role");
+            _logger.LogInformation("Updating role with id {id} - Data: {@role}", id, role);
+
             var result = _serviceRole.UpdateAsync(id, role);
 
             if (!result.Result.IsSuccess)
@@ -78,13 +81,20 @@ namespace acdemic_serv.Controllers
                 return BadRequest(ApiResponse<string>.ErrorResponse(result.Result.ErrorMessage!));
             }
 
-            return Ok(ApiResponse<Role>.SuccessResponse(result.Result.Data!));
+            return Ok(ApiResponse<RoleDTO>.SuccessResponse(result.Result.Data!));
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return Ok();
+            var result = _serviceRole.DeleteAsync(id);
+
+            if (!result.Result.IsSuccess)
+            {
+                return BadRequest(ApiResponse<string>.ErrorResponse(result.Result.ErrorMessage!));
+            }
+
+            return Ok(ApiResponse<bool>.SuccessResponse(result.Result.Data!));
         }
 
     }

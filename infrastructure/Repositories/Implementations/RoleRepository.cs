@@ -61,5 +61,37 @@ namespace infrastructure.Repositories.Implementations
 
         }
 
+        public async Task<Result<bool>> DeleteAsync(int id)
+        {
+            var role = await _context.Role
+            .Include(r => r.Users)
+            .FirstOrDefaultAsync(r => r.Id == id);
+
+            if (role == null)
+            {
+                return Result<bool>.Failure("Role not found");
+            }
+
+            if (role == null)
+            {
+                return Result<bool>.Failure("Role not found");
+            }
+
+            // Verificar si el rol tiene relaciones con otros registros (por ejemplo, usuarios)
+            if (role.Users.Count > 0)
+            {
+                return Result<bool>.Failure("Cannot delete role because it is assigned to users.");
+            }
+
+            // Eliminar el rol si no tiene relaciones
+            _context.Role.Remove(role);
+
+            // Guardar los cambios en la base de datos
+            await _context.SaveChangesAsync();
+
+            // Retornar el rol eliminado
+            return Result<bool>.Success(true);
+        }
+
     }
 }

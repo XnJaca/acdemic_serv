@@ -1,6 +1,7 @@
 using System.Text;
 using acdemic_serv.Extensions;
 using acdemic_serv.Middleware;
+using domain.Profiles;
 using domain.Services.Interfaces;
 using infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,6 +9,11 @@ using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<RoleProfile>();
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "server=mysql-139445-0.cloudclusters.net;port=16997;database=acdemic_client;user id=acdemic_db;password=Acdemic2024;";
@@ -81,5 +87,5 @@ catch (Exception ex)
 }
 finally
 {
-    Log.CloseAndFlush(); 
+    Log.CloseAndFlush();
 }

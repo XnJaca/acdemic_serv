@@ -2,16 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using domain.DTO;
 using domain.Entities;
 
 namespace domain.Services.Interfaces
 {
     public interface IServiceRole
     {
-        Task<Result<Role>> GetByIdAsync(int id);
-        Task<Result<IEnumerable<Role>>> GetAllAsync();
-        Task<Result<Role>> AddAsync(Role role);
-        Task<Result<Role>> UpdateAsync(int id, Role role);
+        Task<Result<RoleDTO>> GetByIdAsync(int id);
+        Task<Result<IEnumerable<RoleDTO>>> GetAllAsync();
+        Task<Result<RoleDTO>> AddAsync(RoleDTO role);
+        Task<Result<RoleDTO>> UpdateAsync(int id, RoleDTO role);
+        Task<Result<bool>> DeleteAsync(int id);
 
     }
 }
