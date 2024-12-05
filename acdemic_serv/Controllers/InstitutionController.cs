@@ -12,90 +12,76 @@ namespace acdemic_serv.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RoleController : BaseController
+    public class InstitutionController : BaseController
     {
-        private readonly ILogger<RoleController> _logger;
-        private readonly IServiceRole _serviceRole;
+        private readonly ILogger<InstitutionController> _logger;
+        private readonly IServiceInstitution _serviceInstitution;
 
-        public RoleController(IServiceRole serviceRole, ILogger<RoleController> logger)
+        public InstitutionController(IServiceInstitution serviceInstitution, ILogger<InstitutionController> logger)
         {
-            _serviceRole = serviceRole;
+            _serviceInstitution = serviceInstitution;
             _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            _logger.LogInformation("Getting all roles");
-
-            var result = await _serviceRole.GetAll();
-
-            return Ok(ApiResponse<IEnumerable<RoleDTO>>.SuccessResponse(result.Data!));
+            _logger.LogInformation("Getting all Institutions");
+            var result = await _serviceInstitution.GetAll();
+            return Ok(ApiResponse<IEnumerable<InstitutionDTO>>.SuccessResponse(result.Data!));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            _logger.LogInformation("Getting role by id");
-
-            var result = await _serviceRole.GetById(id);
-
+            _logger.LogInformation("Getting Institution by id");
+            var result = await _serviceInstitution.GetById(id);
             if (!result.IsSuccess)
             {
                 return NotFound(ApiResponse<string>.ErrorResponse(result.ErrorMessage!));
             }
             else
             {
-                return Ok(ApiResponse<RoleDTO>.SuccessResponse(result.Data!));
+                return Ok(ApiResponse<InstitutionDTO>.SuccessResponse(result.Data!));
             }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] RoleDTO role)
+        public async Task<IActionResult> Add([FromBody] InstitutionDTO entity)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ApiResponse<string>.ErrorResponse("Invalid data"));
             }
-            var result = await _serviceRole.Create(role);
-
+            var result = await _serviceInstitution.Create(entity);
             if (!result.IsSuccess)
             {
                 return BadRequest(ApiResponse<string>.ErrorResponse(result.ErrorMessage!));
             }
-
-            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id },
-                                            ApiResponse<RoleDTO>.SuccessResponse(result.Data!));
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, ApiResponse<InstitutionDTO>.SuccessResponse(result.Data!));
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] RoleDTO role)
+        public IActionResult Update(int id, [FromBody] InstitutionDTO entity)
         {
-
-            _logger.LogInformation("Updating role with id {id} - Data: {@role}", id, role);
-
-            var result = _serviceRole.Update(id, role);
-
+            _logger.LogInformation("Updating Institution with id {id} - Data: {@entity}", id, entity);
+            var result = _serviceInstitution.Update(id, entity);
             if (!result.Result.IsSuccess)
             {
                 return BadRequest(ApiResponse<string>.ErrorResponse(result.Result.ErrorMessage!));
             }
-
-            return Ok(ApiResponse<RoleDTO>.SuccessResponse(result.Result.Data!));
+            return Ok(ApiResponse<InstitutionDTO>.SuccessResponse(result.Result.Data!));
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var result = _serviceRole.Delete(id);
-
+            var result = _serviceInstitution.Delete(id);
             if (!result.Result.IsSuccess)
             {
                 return BadRequest(ApiResponse<string>.ErrorResponse(result.Result.ErrorMessage!));
             }
-
             return Ok(ApiResponse<bool>.SuccessResponse(result.Result.Data!));
         }
-
     }
 }

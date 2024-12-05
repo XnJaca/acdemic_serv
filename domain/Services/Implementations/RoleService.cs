@@ -20,7 +20,7 @@ namespace domain.Services.Implementations
             _mapper = mapper;
         }
 
-        public async Task<Result<RoleDTO>> AddAsync(RoleDTO role)
+        public async Task<Result<RoleDTO>> Create(RoleDTO role)
         {
             var entity = _mapper.Map<Role>(role);
 
@@ -32,7 +32,7 @@ namespace domain.Services.Implementations
 
         }
 
-        public async Task<Result<IEnumerable<RoleDTO>>> GetAllAsync()
+        public async Task<Result<IEnumerable<RoleDTO>>> GetAll()
         {
             // return await _roleRepository.GetAllAsync();
             var result = await _roleRepository.GetAllAsync();
@@ -42,7 +42,7 @@ namespace domain.Services.Implementations
             return Result<IEnumerable<RoleDTO>>.Success(dto);
         }
 
-        public Task<Result<RoleDTO>> GetByIdAsync(int id)
+        public Task<Result<RoleDTO>> GetById(int id)
         {
             var result = _roleRepository.GetByIdAsync(id);
 
@@ -51,7 +51,7 @@ namespace domain.Services.Implementations
             return Task.FromResult(Result<RoleDTO>.Success(dto));
         }
 
-        public async Task<Result<RoleDTO>> UpdateAsync(int id, RoleDTO role)
+        public async Task<Result<RoleDTO>> Update(int id, RoleDTO role)
         {
             var entity = _mapper.Map<Role>(role);
             var result = await _roleRepository.UpdateAsync(id, entity);
@@ -62,7 +62,7 @@ namespace domain.Services.Implementations
 
         }
 
-        public Task<Result<bool>> DeleteAsync(int id)
+        public Task<Result<bool>> Delete(int id)
         {
             return _roleRepository.DeleteAsync(id);
         }
