@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using infrastructure.Db;
 
@@ -11,9 +12,11 @@ using infrastructure.Db;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241206181719_InstitutionChanges")]
+    partial class InstitutionChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +57,7 @@ namespace infrastructure.Migrations
                     b.Property<int>("IdInstitutionType")
                         .HasColumnType("int");
 
-                    b.Property<int?>("IdUser")
+                    b.Property<int>("IdUser")
                         .HasColumnType("int");
 
                     b.Property<int>("InstitutionTypeId")
@@ -142,6 +145,7 @@ namespace infrastructure.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Banner")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("IdCard")
@@ -199,7 +203,8 @@ namespace infrastructure.Migrations
 
             modelBuilder.Entity("infrastructure.Entities.Institution", b =>
                 {
-                    b.Navigation("User");
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("infrastructure.Entities.Role", b =>

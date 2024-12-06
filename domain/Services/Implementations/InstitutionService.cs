@@ -7,21 +7,39 @@ using domain.DTO;
 using domain.Services.Interfaces;
 using infrastructure.Entities;
 using infrastructure.Repositories.Interfaces;
+using Microsoft.Extensions.Logging;
+
 namespace domain.Services.Implementations
 {
     public class InstitutionService : IServiceInstitution
     {
+
+        private readonly ILogger<InstitutionService> _logger;
         private readonly IRepositoryInstitution _repository;
+        private readonly IRepositoryInstitutionType _repositoryInstitutionType;
         private readonly IMapper _mapper;
 
-        public InstitutionService(IRepositoryInstitution repoRepository, IMapper mapper)
+        public InstitutionService(IRepositoryInstitution repoRepository,
+            IMapper mapper, IRepositoryInstitutionType repositoryInstitutionType, ILogger<InstitutionService> logger)
         {
             _repository = repoRepository;
             _mapper = mapper;
+            _repositoryInstitutionType = repositoryInstitutionType;
+            _logger = logger;
         }
 
         public async Task<Result<InstitutionDTO>> Create(InstitutionDTO repo)
         {
+
+            // Validar que el tipo de institución exista
+            var institutionType = await _repositoryInstitutionType.GetById(repo.IdInstitutionType);
+            _logger.LogInformation("InstitutionType: {0}", institutionType);
+            if (!institutionType.IsSuccess)
+            {
+                return Result<InstitutionDTO>.Failure("El tipo de institución no existe");
+            }
+
+
             var entity = _mapper.Map<Institution>(repo);
             var result = await _repository.Create(entity);
             var dto = _mapper.Map<InstitutionDTO>(result.Data);

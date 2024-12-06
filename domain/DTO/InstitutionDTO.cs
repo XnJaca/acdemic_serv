@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using infrastructure.Entities;
 
 namespace domain.DTO
 {
@@ -19,25 +20,30 @@ namespace domain.DTO
 
         public required string Email { get; set; }
 
+        public DateTime FundationDate { get; set; }
+
+        public required int IdInstitutionType { get; set; }
+
+        public InstitutionType? InstitutionType { get; set; }
+
+        public int? IdUser { get; set; }
+
+        public User? User { get; set; }
+
         public string? Logo { get; set; }
 
         public string? Banner { get; set; }
 
-        public required string FundationDate { get; set; }
+        public string? Latitude { get; set; }
 
-        public required string InstitutionType { get; set; }
+        public string? Longitude { get; set; }
 
-        public required string User { get; set; }
+        public string? SchoolCircuit { get; set; }
 
-        public required string Latitude { get; set; }
-
-        public required string Longitude { get; set; }
-
-        public required string SchoolCircuit { get; set; }
-
-        public required string RegionalAddress { get; set; }
+        public string? RegionalAddress { get; set; }
 
         public bool Active { get; set; }
+
 
 
     }

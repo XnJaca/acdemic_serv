@@ -7,12 +7,16 @@ public class Institution
 {
     public int Id { get; set; }
 
+    [Required(ErrorMessage = "Name is required")]
     public required string Name { get; set; }
 
+    [Required(ErrorMessage = "Description is required")]
     public required string Description { get; set; }
 
+    [Required(ErrorMessage = "Address is required")]
     public required string Address { get; set; }
 
+    [Required(ErrorMessage = "Phone is required")]
     public required string Phone { get; set; }
 
     [EmailAddress]
@@ -23,25 +27,26 @@ public class Institution
 
     public string? Banner { get; set; }
 
-    public required string FundationDate { get; set; }
+    [Required(ErrorMessage = "Fundation Date is required")]
+    public required DateTime FundationDate { get; set; }
 
     [ForeignKey("IdInstitutionType")]
-    public int IdInstitutionType { get; set; }
+    public required int IdInstitutionType { get; set; }
 
     public required InstitutionType InstitutionType { get; set; }
 
     [ForeignKey("IdUser")]
-    public int IdUser { get; set; }
+    public int? IdUser { get; set; }
 
-    public required User User { get; set; }
+    public User? User { get; set; }
 
-    public required string Latitude { get; set; }
+    public string? Latitude { get; set; }
 
-    public required string Longitude { get; set; }
+    public string? Longitude { get; set; }
 
-    public required string SchoolCircuit { get; set; }
+    public string? SchoolCircuit { get; set; }
 
-    public required string RegionalAddress { get; set; }
+    public string? RegionalAddress { get; set; }
 
     public bool Active { get; set; }
 

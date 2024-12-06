@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<RoleProfile>();
+    cfg.AddProfile<InstitutionProfile>();
 });
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")

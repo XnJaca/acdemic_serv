@@ -25,7 +25,7 @@ public class User
 
     public string? Avatar { get; set; }
 
-    public required string Banner { get; set; }
+    public string? Banner { get; set; }
 
     public bool Active { get; set; }
 
