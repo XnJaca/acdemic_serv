@@ -23,7 +23,7 @@ namespace acdemic_serv.Utils
         // ERROR RESPONSE
         protected ActionResult<T> ErrorResponse<T>(T? data, string message = "Unexpected error")
         {
-            return Ok(new
+            return BadRequest(new
             {
                 status = false,
                 message,

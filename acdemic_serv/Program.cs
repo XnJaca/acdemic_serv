@@ -1,15 +1,18 @@
 using System.Text;
 using acdemic_serv.Extensions;
 using acdemic_serv.Middleware;
+using domain;
 using domain.Profiles;
 using domain.Services.Interfaces;
-using infrastructure;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+// REGISTER MAPPINGS
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<RoleProfile>();

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using acdemic_serv.Utils;
 using domain.DTO;
-using domain.Entities;
 using domain.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

@@ -2,13 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using domain.Services.Interfaces;
 using infrastructure.Db;
 using infrastructure.Repositories.Implementations;
+using infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace infrastructure
+namespace domain
 {
     public static class DependencyInjection
     {
@@ -20,7 +20,7 @@ namespace infrastructure
 
             // Registrar el repositorio de roles
             services.AddScoped<IRepositoryRole, RoleRepository>();
-
+            services.AddScoped<IRepositoryInstitution, InstitutionRepository>();
             return services;
         }
     }

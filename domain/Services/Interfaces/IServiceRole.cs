@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using domain.DTO;
-using domain.Entities;
+using infrastructure.Entities;
 
 namespace domain.Services.Interfaces
 {

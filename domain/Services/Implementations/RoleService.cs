@@ -4,8 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using domain.DTO;
-using domain.Entities;
 using domain.Services.Interfaces;
+using infrastructure.Entities;
+using infrastructure.Repositories.Interfaces;
 
 namespace domain.Services.Implementations
 {
@@ -45,6 +46,11 @@ namespace domain.Services.Implementations
         public Task<Result<RoleDTO>> GetById(int id)
         {
             var result = _roleRepository.GetByIdAsync(id);
+
+            if (!result.Result.IsSuccess)
+            {
+                return Task.FromResult(Result<RoleDTO>.Failure(result.Result.ErrorMessage!));
+            }
 
             var dto = _mapper.Map<RoleDTO>(result.Result.Data);
 
