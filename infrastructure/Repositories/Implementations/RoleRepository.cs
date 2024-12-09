@@ -1,23 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+ 
 using infrastructure.Db;
-using infrastructure.Entities;
+using infrastructure.Entities; 
 using infrastructure.Repositories.Interfaces;
+using infrastructure.Utils;
+using Infrastructure.Localization.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization; 
 
 namespace infrastructure.Repositories.Implementations
 {
-    public class RoleRepository : IRepositoryRole
+    public class RoleRepository ( ApplicationDbContext context, IStringLocalizer<RoleLocalization> localizer ): IRepositoryRole
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context = context;
+         
 
-        public RoleRepository(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly IStringLocalizer<RoleLocalization> _localizer = localizer;
 
         public async Task<Result<Role>> AddAsync(Role role)
         {
@@ -28,19 +25,49 @@ namespace infrastructure.Repositories.Implementations
             return Result<Role>.Success(result.Entity);
         }
 
-        public async Task<Result<IEnumerable<Role>>> GetAllAsync()
-        {
-            var roles = await _context.Role.ToListAsync();
+        public async Task<Result<IEnumerable<Role>>> GetAllAsync( PaginationFilter query )
+        { 
+            IQueryable<Role> RoleQueryable = _context.Role; 
 
-            return Result<IEnumerable<Role>>.Success(roles);
+            if ( query.SearchString is not null ) { 
+                return await HandleSearchData(query, RoleQueryable);
+            } 
+
+            if ( query.PagingData is not null ) {
+                RoleQueryable = query.PagingData.Paginate(RoleQueryable);
+            }
+
+            var response = await RoleQueryable.ToListAsync();
+
+            return Result<IEnumerable<Role>>.Success(response);
         }
 
+        public   async Task<Result<IEnumerable<Role>>> HandleSearchData ( PaginationFilter query,IQueryable<Role> queryable ) {
+
+            int pageSize = query.PagingData?.PageSize ?? 0;
+            int pageKey = query.PagingData?.PageKey ?? 0;
+
+            if ( query.SearchString is null ) {
+                return Result<IEnumerable<Role>>.Failure(_localizer [ "errorSearchString" ]);
+            }
+
+            List<Role> res = await queryable.Where(
+                u =>
+                u.Id > pageKey && u.Name.ToLower().Contains(query.SearchString.ToLower()) ||
+                u.Id > pageKey && u.Description != null && u.Description.ToLower().Contains(query.SearchString.ToLower())
+            )
+            .Take(pageSize)
+            .ToListAsync();
+              
+            return Result<IEnumerable<Role>>.Success(res);
+        }
+         
         public async Task<Result<Role>> GetByIdAsync(int id)
         {
-            var role = await _context.Role.FindAsync(id);
+            var role = await _context.Role.FindAsync(id); 
 
             return role == null
-                ? Result<Role>.Failure("Role not found")
+                ? Result<Role>.Failure(_localizer [ "notFoundId", id ])
                 : Result<Role>.Success(role);
         }
 
@@ -50,11 +77,11 @@ namespace infrastructure.Repositories.Implementations
 
             if (roleToUpdate == null)
             {
-                return Result<Role>.Failure("Role not found");
+                return Result<Role>.Failure(_localizer [ "notFoundId", id ]);
             }
 
             roleToUpdate.Name = role.Name;
-            roleToUpdate.Description = role.Description;
+            roleToUpdate.Description = role.Description; 
 
             await _context.SaveChangesAsync();
 
@@ -70,27 +97,19 @@ namespace infrastructure.Repositories.Implementations
 
             if (role == null)
             {
-                return Result<bool>.Failure("Role not found");
-            }
-
-            if (role == null)
-            {
-                return Result<bool>.Failure("Role not found");
-            }
-
-            // Verificar si el rol tiene relaciones con otros registros (por ejemplo, usuarios)
+                return Result<bool>.Failure(_localizer [ "notFoundId", id ]);
+            } 
+ 
             if (role.Users.Count > 0)
+                
             {
-                return Result<bool>.Failure("Cannot delete role because it is assigned to users.");
+                return Result<bool>.Failure(_localizer [ "cannotDeletedBecauseIsAssignUsers"]);
             }
-
-            // Eliminar el rol si no tiene relaciones
+ 
             _context.Role.Remove(role);
-
-            // Guardar los cambios en la base de datos
+ 
             await _context.SaveChangesAsync();
-
-            // Retornar el rol eliminado
+ 
             return Result<bool>.Success(true);
         }
 

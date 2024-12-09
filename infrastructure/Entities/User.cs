@@ -3,8 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace infrastructure.Entities;
 
-public class User
-{
+public class User {
     public int Id { get; set; }
 
     public required string IdCard { get; set; }
@@ -18,7 +17,7 @@ public class User
     [MaxLength(100)]
     public required string Email;
 
-    [MaxLength(100)]
+    [MaxLength(255,ErrorMessage ="Jejeje te pasaste de las 255")]
     public required string Password;
 
     public string? Phone { get; set; }

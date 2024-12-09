@@ -2,9 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace infrastructure.Entities;
 
-public class Role
-{
-    public int Id { get; set; }
+public class Role: BaseEntity { 
 
     [Required(ErrorMessage = "Name is required")]
     public string Name { get; set; } = string.Empty;

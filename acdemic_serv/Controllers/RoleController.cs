@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using acdemic_serv.Utils;
 using domain.DTO;
 using domain.Services.Interfaces;
+using domain.Utils; 
 using Microsoft.AspNetCore.Mvc;
 
-namespace acdemic_serv.Controllers
-{
+namespace acdemic_serv.Controllers {
     [ApiController]
     [Route("api/[controller]")]
     public class RoleController : BaseController
@@ -23,11 +20,11 @@ namespace acdemic_serv.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] Filter filter, string? search )
         {
             _logger.LogInformation("Getting all roles");
 
-            var result = await _serviceRole.GetAll();
+            var result = await _serviceRole.GetAll(filter, search);
 
             return Ok(ApiResponse<IEnumerable<RoleDTO>>.SuccessResponse(result.Data!));
         }
@@ -39,14 +36,10 @@ namespace acdemic_serv.Controllers
 
             var result = await _serviceRole.GetById(id);
 
-            if (!result.IsSuccess)
-            {
-                return NotFound(ApiResponse<string>.ErrorResponse(result.ErrorMessage!));
-            }
-            else
-            {
-                return Ok(ApiResponse<RoleDTO>.SuccessResponse(result.Data!));
-            }
+           return result.Fold<IActionResult>(
+                ( success ) => Ok(ApiResponse<RoleDTO>.SuccessResponse(success)),
+                ( error ) => NotFound(ApiResponse<string>.ErrorResponse(error))
+           );  
         }
 
         [HttpPost]

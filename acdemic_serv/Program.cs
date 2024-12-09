@@ -13,11 +13,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // REGISTER MAPPINGS
-builder.Services.AddAutoMapper(cfg =>
-{
-    cfg.AddProfile<RoleProfile>();
-    cfg.AddProfile<InstitutionProfile>();
-});
+builder.Services.AddAutoMapper(typeof(MapingProfiles));
+
+//LOCALIZATION
+builder.Services.AddLocalization();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "server=mysql-139445-0.cloudclusters.net;port=16997;database=acdemic_client;user id=acdemic_db;password=Acdemic2024;";
@@ -25,8 +24,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 // Add services to the container.
 builder.Services.AddInfraServices(connectionString);
 builder.Services.AddApplicationServices();
-
-
+ 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -55,9 +53,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
-    });
-
-
+    }); 
+ 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -70,6 +67,14 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseHttpsRedirection();
+
+// Configure localization
+var supportedCultures = new [] { "es-CR", "en-US" };
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures [ 0 ])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+app.UseRequestLocalization(localizationOptions);
 
 // app.UseAuthentication();
 app.UseAuthorization();

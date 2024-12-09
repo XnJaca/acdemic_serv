@@ -25,11 +25,10 @@ namespace acdemic_serv.Middleware
             {
                 await HandleExceptionAsync(context, ex);
             }
-        }
+        } 
 
         private Task HandleExceptionAsync(HttpContext context, Exception ex)
-        {
-            // Loguea la excepción
+        { 
             var loggerFactory = context.RequestServices.GetService<ILoggerFactory>();
             var logger = loggerFactory.CreateLogger<ErrorHandlingMiddleware>();
             logger.LogError(ex, "Unhandled exception occurred while processing the request.");
@@ -44,6 +43,7 @@ namespace acdemic_serv.Middleware
                 Message = "An unexpected error occurred. Please try again later.",
                 Detail = "Internal Server Error"
             };
+
 
             return context.Response.WriteAsJsonAsync(result);
         }
