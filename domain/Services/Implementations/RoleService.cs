@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+ 
 using AutoMapper;
 using domain.DTO;
 using domain.Services.Interfaces;
+using domain.Utils;
 using infrastructure.Entities;
 using infrastructure.Repositories.Interfaces;
+using infrastructure.Utils;
 
 namespace domain.Services.Implementations
 {
@@ -27,50 +30,53 @@ namespace domain.Services.Implementations
 
             var result = await _roleRepository.AddAsync(entity);
 
-            var dto = _mapper.Map<RoleDTO>(result.Data);
-
-            return Result<RoleDTO>.Success(dto);
-
+            return result.Fold(
+                ( success ) => Result<RoleDTO>.Success(_mapper.Map<RoleDTO>(result.Data)),
+                ( error ) => Result<RoleDTO>.Failure(error)
+            ); 
         }
 
-        public async Task<Result<IEnumerable<RoleDTO>>> GetAll()
-        {
-            // return await _roleRepository.GetAllAsync();
-            var result = await _roleRepository.GetAllAsync();
+        public async Task<Result<IEnumerable<RoleDTO>>> GetAll( Filter filter, string? search ) {
 
-            var dto = _mapper.Map<IEnumerable<RoleDTO>>(result.Data);
+            var query = new PaginationFilter { SearchString = search, PagingData = filter.ToPaginData() };
 
-            return Result<IEnumerable<RoleDTO>>.Success(dto);
+            var result = await _roleRepository.GetAllAsync(query);
+
+            return result.Fold(
+               ( success ) => Result<IEnumerable<RoleDTO>>.Success(_mapper.Map<IEnumerable<RoleDTO>>(result.Data)),
+               ( error ) => Result<IEnumerable<RoleDTO>>.Failure(error)
+            ); 
         }
 
-        public Task<Result<RoleDTO>> GetById(int id)
+        public async Task<Result<RoleDTO>> GetById (int id)
         {
-            var result = _roleRepository.GetByIdAsync(id);
-
-            if (!result.Result.IsSuccess)
-            {
-                return Task.FromResult(Result<RoleDTO>.Failure(result.Result.ErrorMessage!));
-            }
-
-            var dto = _mapper.Map<RoleDTO>(result.Result.Data);
-
-            return Task.FromResult(Result<RoleDTO>.Success(dto));
+            Result<Role> result = await _roleRepository.GetByIdAsync(id);
+  
+            return result.Fold(
+                ( success ) => Result<RoleDTO>.Success(_mapper.Map<RoleDTO>(success)) ,
+                ( error ) =>  Result<RoleDTO>.Failure(error)
+            ); 
         }
 
         public async Task<Result<RoleDTO>> Update(int id, RoleDTO role)
         {
-            var entity = _mapper.Map<Role>(role);
+            var entity = _mapper.Map<Role>(role); 
             var result = await _roleRepository.UpdateAsync(id, entity);
 
-            var dto = _mapper.Map<RoleDTO>(result.Data);
-
-            return Result<RoleDTO>.Success(dto);
-
+            return result.Fold(
+               ( success ) => Result<RoleDTO>.Success(_mapper.Map<RoleDTO>(success)),
+               ( error ) => Result<RoleDTO>.Failure(error)
+            );  
         }
 
-        public Task<Result<bool>> Delete(int id)
+        public async Task<Result<bool>> Delete(int id)
         {
-            return _roleRepository.DeleteAsync(id);
+             var result = await _roleRepository.DeleteAsync(id);
+
+            return result.Fold(
+              ( success ) => Result<bool>.Success(success),
+              ( error ) => Result<bool>.Failure(error)
+            );
         }
     }
 }
