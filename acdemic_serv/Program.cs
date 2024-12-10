@@ -3,21 +3,26 @@ using acdemic_serv.Extensions;
 using acdemic_serv.Middleware;
 using domain;
 using domain.Profiles;
-using domain.Services.Interfaces;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
+using FluentValidation;
+using acdemic_serv.Utils;
+using static domain.DTO.User.CreateUser;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+
 var builder = WebApplication.CreateBuilder(args);
-
-
-// REGISTER MAPPINGS
-builder.Services.AddAutoMapper(typeof(MapingProfiles));
 
 //LOCALIZATION
 builder.Services.AddLocalization();
 
+// REGISTER MAPPINGS
+builder.Services.AddAutoMapper(typeof(MapingProfiles));
+ 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? "server=mysql-139445-0.cloudclusters.net;port=16997;database=acdemic_client;user id=acdemic_db;password=Acdemic2024;";
 
@@ -28,7 +33,15 @@ builder.Services.AddApplicationServices();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options => {
+    options.SupportNonNullableReferenceTypes();
+});
+
+
+// FluentValidation config 
+builder.Services.AddValidationServices();
+  
+//builder.Services.AddHttpContextAccessor();
 
 // Configure Logging
 Log.Logger = new LoggerConfiguration()
