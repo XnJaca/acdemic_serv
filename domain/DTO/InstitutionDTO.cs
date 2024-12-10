@@ -22,11 +22,11 @@ namespace domain.DTO
 
         public DateTime FundationDate { get; set; }
 
-        public required int IdInstitutionType { get; set; }
+        public required int InstitutionTypeId { get; set; }
 
         public InstitutionType? InstitutionType { get; set; }
 
-        public int? IdUser { get; set; }
+        public int? UserId { get; set; }
 
         public User? User { get; set; }
 

@@ -12,8 +12,8 @@ using infrastructure.Db;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241206182102_InstitutionChanges_1")]
-    partial class InstitutionChanges_1
+    [Migration("20241210215225_InstitutionDirectorId")]
+    partial class InstitutionDirectorId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,12 +54,6 @@ namespace infrastructure.Migrations
                     b.Property<DateTime>("FundationDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("IdInstitutionType")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("IdUser")
-                        .HasColumnType("int");
-
                     b.Property<int>("InstitutionTypeId")
                         .HasColumnType("int");
 
@@ -86,6 +80,9 @@ namespace infrastructure.Migrations
                     b.Property<string>("SchoolCircuit")
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("InstitutionTypeId");
@@ -103,7 +100,8 @@ namespace infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -151,7 +149,7 @@ namespace infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("IdInstitution")
+                    b.Property<int>("InstitutionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Phone")
@@ -162,7 +160,7 @@ namespace infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdInstitution")
+                    b.HasIndex("InstitutionId")
                         .IsUnique();
 
                     b.HasIndex("RoleId");
@@ -185,7 +183,7 @@ namespace infrastructure.Migrations
                 {
                     b.HasOne("infrastructure.Entities.Institution", "Institution")
                         .WithOne("User")
-                        .HasForeignKey("infrastructure.Entities.User", "IdInstitution")
+                        .HasForeignKey("infrastructure.Entities.User", "InstitutionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

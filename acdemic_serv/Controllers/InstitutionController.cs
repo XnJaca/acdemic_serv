@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using acdemic_serv.Utils;
 using domain.DTO;
 using domain.Services.Interfaces;
+using domain.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace acdemic_serv.Controllers
@@ -23,10 +24,10 @@ namespace acdemic_serv.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] Filter filter, string? search)
         {
             _logger.LogInformation("Getting all Institutions");
-            var result = await _serviceInstitution.GetAll();
+            var result = await _serviceInstitution.GetAll(filter, search);
             return Ok(ApiResponse<IEnumerable<InstitutionDTO>>.SuccessResponse(result.Data!));
         }
 
@@ -35,14 +36,11 @@ namespace acdemic_serv.Controllers
         {
             _logger.LogInformation("Getting Institution by id");
             var result = await _serviceInstitution.GetById(id);
-            if (!result.IsSuccess)
-            {
-                return NotFound(ApiResponse<string>.ErrorResponse(result.ErrorMessage!));
-            }
-            else
-            {
-                return Ok(ApiResponse<InstitutionDTO>.SuccessResponse(result.Data!));
-            }
+
+            return result.Fold<IActionResult>(
+                (success) => Ok(ApiResponse<InstitutionDTO>.SuccessResponse(success)),
+                (error) => NotFound(ApiResponse<string>.ErrorResponse(error))
+            );
         }
 
         [HttpPost]
@@ -57,14 +55,17 @@ namespace acdemic_serv.Controllers
             {
                 return BadRequest(ApiResponse<string>.ErrorResponse(result.ErrorMessage!));
             }
-            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, ApiResponse<InstitutionDTO>.SuccessResponse(result.Data!));
+            return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id },
+                                    ApiResponse<InstitutionDTO>.SuccessResponse(result.Data!));
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody] InstitutionDTO entity)
         {
             _logger.LogInformation("Updating Institution with id {id} - Data: {@entity}", id, entity);
+
             var result = _serviceInstitution.Update(id, entity);
+
             if (!result.Result.IsSuccess)
             {
                 return BadRequest(ApiResponse<string>.ErrorResponse(result.Result.ErrorMessage!));
@@ -81,6 +82,17 @@ namespace acdemic_serv.Controllers
                 return BadRequest(ApiResponse<string>.ErrorResponse(result.Result.ErrorMessage!));
             }
             return Ok(ApiResponse<bool>.SuccessResponse(result.Result.Data!));
+        }
+
+        [HttpPost("{id}/director/{directorId}")]
+        public async Task<IActionResult> AssignDirector(int id, int directorId)
+        {
+            var result = await _serviceInstitution.AssignDirector(id, directorId);
+
+            return result.Fold<IActionResult>(
+                (success) => Ok(ApiResponse<InstitutionDTO>.SuccessResponse(success)),
+                (error) => BadRequest(ApiResponse<string>.ErrorResponse(error))
+            );
         }
     }
 }

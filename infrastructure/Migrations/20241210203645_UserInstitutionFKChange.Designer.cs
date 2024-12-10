@@ -12,8 +12,8 @@ using infrastructure.Db;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241206181719_InstitutionChanges")]
-    partial class InstitutionChanges
+    [Migration("20241210203645_UserInstitutionFKChange")]
+    partial class UserInstitutionFKChange
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -54,10 +54,7 @@ namespace infrastructure.Migrations
                     b.Property<DateTime>("FundationDate")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("IdInstitutionType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("IdUser")
+                    b.Property<int?>("IdUser")
                         .HasColumnType("int");
 
                     b.Property<int>("InstitutionTypeId")
@@ -103,7 +100,8 @@ namespace infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -145,14 +143,13 @@ namespace infrastructure.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Banner")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("IdCard")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("IdInstitution")
+                    b.Property<int>("InstitutionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Phone")
@@ -163,7 +160,7 @@ namespace infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdInstitution")
+                    b.HasIndex("InstitutionId")
                         .IsUnique();
 
                     b.HasIndex("RoleId");
@@ -186,7 +183,7 @@ namespace infrastructure.Migrations
                 {
                     b.HasOne("infrastructure.Entities.Institution", "Institution")
                         .WithOne("User")
-                        .HasForeignKey("infrastructure.Entities.User", "IdInstitution")
+                        .HasForeignKey("infrastructure.Entities.User", "InstitutionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -203,8 +200,7 @@ namespace infrastructure.Migrations
 
             modelBuilder.Entity("infrastructure.Entities.Institution", b =>
                 {
-                    b.Navigation("User")
-                        .IsRequired();
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("infrastructure.Entities.Role", b =>
