@@ -29,16 +29,16 @@ public class Institution : BaseEntity
 
     [Required(ErrorMessage = "Fundation Date is required")]
     public required DateTime FundationDate { get; set; }
-
-    [ForeignKey("InstitutionTypeId")]
+     
     public required int InstitutionTypeId { get; set; }
 
+    [ForeignKey("InstitutionTypeId")]
     public required InstitutionType InstitutionType { get; set; }
-
-    [ForeignKey("UserId")]
+     
     public int? UserId { get; set; }
 
     [JsonIgnore]
+    [ForeignKey("UserId")]
     public User? User { get; set; }
 
     public string? Latitude { get; set; }
