@@ -11,8 +11,11 @@ namespace acdemic_serv.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+ services.AddScoped<IServiceUser, UserService>();
+            
             services.AddScoped<IServiceRole, RoleService>();
             services.AddScoped<IServiceInstitution, InstitutionService>();
+            services.AddScoped<IServiceInstitutionType, InstitutionTypeService>(); 
             // Agrega aquí otros servicios de aplicación
             // services.AddScoped<IDbConnectionService, DbConnectionService>();
             // services.AddHttpContextAccessor();

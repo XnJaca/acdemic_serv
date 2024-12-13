@@ -3,22 +3,29 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace infrastructure.Entities;
 
-public class User {
-    public int Id { get; set; }
-
+public class User : BaseEntity {
+    
     public required string IdCard { get; set; }
 
     [MaxLength(100)]
-    public required string Name;
+    public required string Name {
+        get; set;
+    }
 
     [MaxLength(100)]
-    public required string LastName;
+    public required string LastName {
+        get; set;
+    }
 
     [MaxLength(100)]
-    public required string Email;
+    public required string Email {
+        get; set;
+    }
 
-    [MaxLength(255,ErrorMessage ="Jejeje te pasaste de las 255")]
-    public required string Password;
+    [MaxLength(255)]
+    public required string Password {
+        get; set;
+    }
 
     public string? Phone { get; set; }
 
@@ -28,10 +35,10 @@ public class User {
 
     public bool Active { get; set; }
 
-    [ForeignKey("IdInstitution")]
+    [ForeignKey("InstitutionId")]
     public required Institution Institution { get; set; }
 
-    public int IdInstitution { get; set; }
+    public int InstitutionId { get; set; }
 
     [ForeignKey("RoleId")]
     public required Role Role { get; set; }

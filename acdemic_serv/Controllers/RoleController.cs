@@ -57,7 +57,7 @@ namespace acdemic_serv.Controllers {
             }
 
             return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id },
-                                            ApiResponse<RoleDTO>.SuccessResponse(result.Data!));
+            ApiResponse<RoleDTO>.SuccessResponse(result.Data!));
         }
 
         [HttpPut("{id}")]
