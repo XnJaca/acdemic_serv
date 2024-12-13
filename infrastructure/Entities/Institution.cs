@@ -1,18 +1,22 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace infrastructure.Entities;
 
-public class Institution
+public class Institution : BaseEntity
 {
-    public int Id { get; set; }
 
+    [Required(ErrorMessage = "Name is required")]
     public required string Name { get; set; }
 
+    [Required(ErrorMessage = "Description is required")]
     public required string Description { get; set; }
 
+    [Required(ErrorMessage = "Address is required")]
     public required string Address { get; set; }
 
+    [Required(ErrorMessage = "Phone is required")]
     public required string Phone { get; set; }
 
     [EmailAddress]
@@ -23,26 +27,34 @@ public class Institution
 
     public string? Banner { get; set; }
 
-    public required string FundationDate { get; set; }
+    [Required(ErrorMessage = "Fundation Date is required")]
+    public required DateTime FundationDate { get; set; }
 
-    [ForeignKey("IdInstitutionType")]
-    public int IdInstitutionType { get; set; }
+    [ForeignKey("InstitutionTypeId")]
+    public required int InstitutionTypeId { get; set; }
 
     public required InstitutionType InstitutionType { get; set; }
 
-    [ForeignKey("IdUser")]
-    public int IdUser { get; set; }
+    [ForeignKey("UserId")]
+    public int? UserId { get; set; }
 
-    public required User User { get; set; }
+    [JsonIgnore]
+    public User? User { get; set; }
 
-    public required string Latitude { get; set; }
+    public string? Latitude { get; set; }
 
-    public required string Longitude { get; set; }
+    public string? Longitude { get; set; }
 
-    public required string SchoolCircuit { get; set; }
+    public string? SchoolCircuit { get; set; }
 
-    public required string RegionalAddress { get; set; }
+    public string? RegionalAddress { get; set; }
 
     public bool Active { get; set; }
 
+
+    public string ToString()
+    {
+        // return all data
+        return $"Id: {Id}, Name: {Name}, Description: {Description}, Address: {Address}, Phone: {Phone}, Email: {Email}, Logo: {Logo}, Banner: {Banner}, FundationDate: {FundationDate}, IdInstitutionType: {InstitutionTypeId}, UserId: {UserId}, Latitude: {Latitude}, Longitude: {Longitude}, SchoolCircuit: {SchoolCircuit}, RegionalAddress: {RegionalAddress}, Active: {Active}";
+    }
 }

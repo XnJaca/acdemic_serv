@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace infrastructure.Entities;
 
-public class InstitutionType
+public class InstitutionType : BaseEntity
 {
-    public int Id { get; set; }
-
+    [Required(ErrorMessage = "Name is required")]
+    [MaxLength(50)]
     public required string Name { get; set; }
 }

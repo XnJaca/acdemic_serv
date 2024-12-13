@@ -21,7 +21,9 @@ namespace domain
             // Registrar el repositorio de roles
             services.AddScoped<IRepositoryRole, RoleRepository>();
             services.AddScoped<IRepositoryInstitution, InstitutionRepository>();
+ services.AddScoped<IRepositoryInstitutionType, InstitutionTypeRepository>();
             services.AddScoped<IRepositoryUser, UserRepository>();
+            
             return services;
         }
     }

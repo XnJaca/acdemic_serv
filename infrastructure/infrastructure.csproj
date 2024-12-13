@@ -10,4 +10,7 @@
     <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="9.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
 </Project>
