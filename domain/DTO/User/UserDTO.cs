@@ -1,9 +1,9 @@
 ﻿ using System.Text.Json.Serialization; 
 
 namespace domain.DTO.User {
-    public class UserDTO {
+    public record UserDTO {
          
-        public int Id {
+        public int? Id {
             get; set;
         }
         public string? IdCard {
@@ -38,7 +38,7 @@ namespace domain.DTO.User {
             get; set;
         }
 
-        public bool Active {
+        public bool? Active {
             get; set;
         }
 

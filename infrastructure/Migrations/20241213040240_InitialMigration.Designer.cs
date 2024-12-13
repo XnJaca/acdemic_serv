@@ -11,8 +11,8 @@ using infrastructure.Db;
 namespace infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241209201745_InitialMigration1")]
-    partial class InitialMigration1
+    [Migration("20241213040240_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

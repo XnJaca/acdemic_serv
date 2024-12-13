@@ -22,7 +22,7 @@ public class User : BaseEntity {
         get; set;
     }
 
-    [MaxLength(255, ErrorMessage = "Jejeje te pasaste de las 255")]
+    [MaxLength(255)]
     public required string Password {
         get; set;
     }

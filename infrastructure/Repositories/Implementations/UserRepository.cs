@@ -7,15 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace infrastructure.Repositories.Implementations {
-    public class UserRepository: IRepositoryUser {
+    public class UserRepository ( ApplicationDbContext context, IStringLocalizer<GlobalLocalization> localizer ): IRepositoryUser {
 
-        private readonly ApplicationDbContext _context ;
-        private readonly IStringLocalizer<GlobalLocalization> _localizer  ;
-
-        public UserRepository ( ApplicationDbContext context, IStringLocalizer<GlobalLocalization> localizer ) {
-            _context = context;
-            _localizer = localizer;
-        }
+        private readonly ApplicationDbContext _context = context;
+        private readonly IStringLocalizer<GlobalLocalization> _localizer = localizer;
 
         public async Task<Result<IEnumerable<User>>> GetAllAsync ( PaginationFilter query ) {
             IQueryable<User> UserQueryable = _context.User;
@@ -60,19 +55,17 @@ namespace infrastructure.Repositories.Implementations {
         }
 
         public async Task<Result<User>> AddAsync ( User user ) {
-            //TODO: check role id and institution id
             try {
                 var userCreated = await _context.User.AddAsync(user);
 
-                await _context.SaveChangesAsync(); 
+                var a =  await _context.SaveChangesAsync(); 
 
                 return Result<User>.Success(userCreated.Entity);
 
-            } catch ( Exception ) {
-
-                throw;
-            }
-
+            } catch ( Exception ex) {
+                Console.WriteLine(ex.Message);
+                return Result<User>.Failure(_localizer [ "errorWhenCreate", "User" ]);
+            } 
         }
 
         public async Task<Result<User>> UpdateAsync ( int id, User user ) {

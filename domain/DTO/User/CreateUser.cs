@@ -1,41 +1,80 @@
 ﻿using FluentValidation;
 using infrastructure.Db;
+using infrastructure.Entities;
 using infrastructure.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization; 
 
 namespace domain.DTO.User {
-    public class CreateUser: UserDTO {
+    public record CreateUser: UserDTO {
         public class CreateUserValidator: AbstractValidator<CreateUser> {
             public CreateUserValidator ( ApplicationDbContext context,
                 IStringLocalizer<GlobalLocalization> localizer ) {
 
-                RuleFor(usuario => usuario.Name).Cascade(CascadeMode.Stop)
+                //Identification
+                RuleFor(user => user.IdCard).Cascade(CascadeMode.Stop)
+                    .NotEmpty(); 
+                //Name
+                RuleFor(user => user.Name).Cascade(CascadeMode.Stop) 
                   .NotEmpty()
-                  .MustAsync(async ( nombre, cancellationToken ) => {
-                      var trimmedNombre = nombre is null ? "" : nombre.Trim();
-                      var alreadyExists = await context.User
-                          .AnyAsync(u => u.Name == trimmedNombre);
-
-                      return !alreadyExists;
-                  })
-                   .WithMessage(usuario => localizer [ "\"{0}\" is already registered.",
-              usuario.Name is null ? "" : usuario.Name.Trim() ]);
-
-                RuleFor(usuario => usuario.Email).Cascade(CascadeMode.Stop)
+                  .MaximumLength(100); 
+                //LastName
+                RuleFor(user => user.LastName).Cascade(CascadeMode.Stop)
+                    .NotEmpty()
+                    .MaximumLength(100); 
+                //Email
+                RuleFor(user => user.Email).Cascade(CascadeMode.Stop)
                     .NotEmpty()
                     .EmailAddress()
                     .MustAsync(async ( email, cancellationCoken ) => {
                         var trimmedEmail = email is null ? "" : email.Trim();
                         var alreadyExists = await context.User
-                            .AnyAsync(u => u.Email == trimmedEmail);
+                            .AnyAsync(u => u.Email == trimmedEmail, cancellationToken: cancellationCoken);
 
                         return !alreadyExists;
                     })
-                    .WithMessage(usuario => localizer [ "\"{0}\" is already registered.",
-                       usuario.Email is null ? "" : usuario.Email.Trim() ]);
+                    .WithMessage(user => localizer [ "isAlreadyRegistered",
+                       user.Email is null ? "" : user.Email.Trim() ]);
+                //Password
+                RuleFor(user => user.Password).Cascade(CascadeMode.Stop)
+                    .MinimumLength(6)
+                    .NotEmpty(); 
+                //Phone
+                //RuleFor(user => user.Phone).Cascade(CascadeMode.Stop)
+                //   .NotEmpty();
+                //Avatar
+                //RuleFor(user => user.Avatar).Cascade(CascadeMode.Stop)
+                //   .NotEmpty();
+                //Banner
+                RuleFor(user => user.Banner).Cascade(CascadeMode.Stop)
+                   .NotEmpty();
+                //Active
+                RuleFor(user => user.Active).Cascade(CascadeMode.Stop)
+                   .NotNull();
+                //InstitutionId
+                RuleFor(user => user.InstitutionId).Cascade(CascadeMode.Stop)
+                   .NotEmpty()
+                   .GreaterThan(0)
+                   .MustAsync(async ( institutionId, cancellationCoken ) => {
+                       var exist = await context.Institution
+                           .AnyAsync(u => u.Id == institutionId, cancellationToken: cancellationCoken);
 
-                RuleFor(usuario => usuario.Password).NotEmpty();
+                       return exist;
+                   })
+                    .WithMessage(user => localizer [ "notExistWithId",
+                       "Institution", user.InstitutionId ]);
+                //RoleId
+                RuleFor(user => user.RoleId).Cascade(CascadeMode.Stop)
+                   .NotEmpty()
+                   .GreaterThan(0)
+                   .MustAsync(async ( roleId, cancellationCoken ) => { 
+                        var exist = await context.Role
+                            .AnyAsync(u => u.Id == roleId, cancellationToken: cancellationCoken);
+
+                        return exist;
+                    })
+                    .WithMessage(user => localizer [ "notExistWithId",
+                       "Role",user.RoleId  ]);
             }
         }
     }

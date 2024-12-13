@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="errorWhenCreate" xml:space="preserve">
+    <value>Error when create '{0}'</value>
+  </data>
+  <data name="isAlreadyRegistered" xml:space="preserve">
+    <value>'{0}' is already registered in database.</value>
+  </data>
   <data name="IsRequired" xml:space="preserve">
     <value>{0} is required</value>
+  </data>
+  <data name="notExistWithId" xml:space="preserve">
+    <value>'{0}' with ID '{1}' doesn't exist in database.</value>
   </data>
   <data name="TooLong" xml:space="preserve">
     <value>{0} is too long</value>

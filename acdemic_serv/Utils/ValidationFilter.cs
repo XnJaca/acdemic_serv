@@ -3,23 +3,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
-namespace acdemic_serv.Utils;
-
-public class ValidationFilter<T>: IActionFilter where T : class {
+public class ValidationFilter<T>: IAsyncActionFilter where T : class {
     private readonly IValidator<T>? _validator;
 
     public ValidationFilter ( IValidator<T>? validator ) {
         _validator = validator;
     }
 
-    public void OnActionExecuting ( ActionExecutingContext context ) {
+    public async Task OnActionExecutionAsync ( ActionExecutingContext context, ActionExecutionDelegate next ) {
         if ( context.ActionArguments.TryGetValue("data", out var argument) && argument is T entityToValidate ) {
             if ( _validator is not null ) {
-                var validationResult = _validator.Validate(entityToValidate);
+                var validationResult = await _validator.ValidateAsync(entityToValidate, context.HttpContext.RequestAborted);
                 if ( !validationResult.IsValid ) {
                     context.Result = new ObjectResult(new ValidationProblemDetails(validationResult.ToDictionary())) {
                         StatusCode = ( int )HttpStatusCode.UnprocessableEntity
                     };
+                    return;
                 }
             }
         } else {
@@ -28,10 +27,9 @@ public class ValidationFilter<T>: IActionFilter where T : class {
             })) {
                 StatusCode = ( int )HttpStatusCode.BadRequest
             };
+            return;
         }
-    }
-
-    public void OnActionExecuted ( ActionExecutedContext context ) {
-        // No necesitamos implementar esta parte.
+         
+        await next();
     }
 }

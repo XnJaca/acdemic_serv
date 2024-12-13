@@ -27,8 +27,8 @@ namespace acdemic_serv.Controllers {
         public async Task<IActionResult> GetById ( int id ) {
             throw new NotImplementedException();
         }
-
-        [HttpPost]
+         
+        [HttpPost] 
         [ProducesResponseType(typeof(CreateUser), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
